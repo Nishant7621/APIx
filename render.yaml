@@ -16,6 +16,8 @@ services:
         value: "true"
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: PYTHON_VERSION
+        value: "3.12.2"
 
   # 2. Next.js 14 Web Dashboard Frontend
   - type: web
@@ -29,6 +31,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: "20.18.0"
       - key: NEXT_PUBLIC_API_URL
         fromService:
           type: web
