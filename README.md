@@ -1,15 +1,16 @@
 # Airline Price Index (APIx) - Flight Fare Monitoring
 
-A beginner-friendly, local-first flight fare monitoring and Airline Price Index (APIx) project built with Python 3.12, PostgreSQL, SQLAlchemy, APScheduler, Pandas, Streamlit, Plotly, and FastAPI.
+A production-grade, real-time flight fare monitoring and Airline Price Index (APIx) engine built for Smart India Hackathon (SIH 2026, Problem Statement 26056 - MoSPI / RBI). 
+
+Powered by **Python 3.12, FastAPI, PostgreSQL 18, SQLAlchemy, APScheduler, Polars**, and a modern **Next.js 14 / React 18 / Tailwind CSS / Chart.js** web dashboard.
 
 ---
 
-## 🛡️ Safety & Compliance First
-- **Permitted Sources Only**: Collects fare observations strictly from permitted public flight-search sources or authorized developer APIs.
-- **Respects Access Rules**: Strictly adheres to `robots.txt`, terms of service, rate limits, and access rules.
-- **No CAPTCHA Bypass**: Never bypasses CAPTCHA, bot protections, login walls, or paywalls. Automatically stops and logs when a block or rate limit is encountered.
-- **No Privacy Violations**: Never stores user credentials, session cookies, payment cards, or passenger details.
-- **Transparent Provenance**: Clearly distinguishes synthetic demo / replay data from live collections.
+## 🛡️ Safety & Ethical Compliance (RFC 9309)
+- **Permitted Sources Only**: Collects unauthenticated, public fare observations strictly from permitted airline portals and major online travel aggregators (OTAs).
+- **RFC 9309 Compliance**: Strictly adheres to `robots.txt`, access rules, and automated circuit-breakers (halts on HTTP 403, 429, or CAPTCHA).
+- **Cryptographic Data Integrity**: Every raw payload is timestamped and hashed with **SHA-256** before cleaning to maintain a tamper-evident audit trail for statistical reproducibility.
+- **Privacy Safe**: Never collects or stores passenger identities, personal credentials, payment data, or session cookies.
 
 ---
 
@@ -17,40 +18,38 @@ A beginner-friendly, local-first flight fare monitoring and Airline Price Index 
 
 ```text
 flight-price-index/
+├── frontend/           # Modern Next.js 14 + React 18 + Tailwind CSS Web Application
+│   ├── src/app/        # App Router pages (Dashboard, Heatmap, Velocity Analytics)
+│   ├── public/         # Static assets and icons
+│   └── package.json    # Frontend dependencies
+├── api/                # High-Performance FastAPI REST Service
+│   ├── main.py         # REST endpoints with Swagger UI at /docs
+│   └── schemas.py      # Pydantic request/response validation models
 ├── collector/          # Base adapter interface & permitted source adapters
 │   ├── base_adapter.py # ABC enforcing safety, SHA-256 hashing, and persistence
-│   ├── example_adapter.py # DEL-BOM T+7 adapter with live source extension points
+│   ├── example_adapter.py # DEL-BOM adapter with live source extension points
 │   └── run_single_collection.py # Standalone runner
-├── scheduler/          # APScheduler daily & demo collection schedules
+├── scheduler/          # APScheduler automated collection & safety guards
 │   ├── safety_guard.py # Concurrency lock (1 session/domain) & zero-retry circuit breaker
-│   ├── demo_mode.py    # 3-run max demo mode
-│   ├── research_mode.py# Daily 10:00 AM & 6:00 PM cron schedules
-│   └── run_scheduler.py# CLI launcher
+│   ├── daily_auto_collector.py # Automated daily incremental cron ingestion
+│   └── research_mode.py# Scheduled research collection windows
 ├── database/           # PostgreSQL configuration, models, queries, and seed data
 │   ├── connection.py   # SQLAlchemy engine with SQLite fallback
 │   ├── models.py       # collection_runs, raw_responses, fare_quotes, source_health
-│   ├── init_db.py      # Table creation script
-│   └── seed_demo_data.py # 30-day synthetic pilot data generator
+│   └── init_db.py      # Table creation and schema migration script
 ├── pipeline/           # Cleaning, validation, deduplication, missing data logic
-│   ├── deduplication.py# Signature-based deduplication
 │   ├── cleaner_validator.py # Code standardization & fare component validation
+│   ├── deduplication.py# Signature-based deduplication
 │   ├── outliers.py     # Transparent IQR & MAD outlier flagging (never deletes)
-│   ├── missing_data_report.py # Route & booking window completeness audit
 │   └── run_pipeline.py # Complete data quality orchestrator
 ├── analytics/          # Economic indexing engine
-│   ├── metrics.py      # Daily medians, 7-day base benchmark, weighted geometric APIx
-│   └── apix_calculator.py # Unified APIx calculation engine
-├── dashboard/          # Streamlit + Plotly interactive dashboard
-│   └── app.py          # 6-tab interactive monitoring UI
-├── api/                # FastAPI read-only REST API
-│   ├── schemas.py      # Pydantic request/response models
-│   └── main.py         # REST endpoints with Swagger UI at /docs
+│   ├── apix_calculator.py # DGCA-weighted Jevons geometric index calculator
+│   └── metrics.py      # Daily medians, 7-day base benchmark, velocity metrics
 ├── tests/              # Pytest test suite (29 tests across all phases)
 ├── docs/               # Setup guides and architecture documentation
-│   └── postgresql_setup_windows.md
-├── Dockerfile          # Container specification
-├── docker-compose.yml  # Multi-service setup (Postgres + FastAPI + Streamlit)
-├── requirements.txt    # Python dependencies
+├── Dockerfile          # Container specification for FastAPI backend
+├── docker-compose.yml  # Multi-service setup (PostgreSQL + FastAPI + Next.js)
+├── requirements.txt    # Python backend dependencies
 └── README.md
 ```
 
@@ -72,64 +71,66 @@ flight-price-index/
 
 ---
 
-## 🚀 Quickstart Guide (Windows PowerShell)
+## 🚀 Quickstart Guide (Local Development)
 
-### 1. Environment Setup
+### 1. Backend Setup (FastAPI + PostgreSQL)
 ```powershell
+# Navigate to project root
 cd "c:\All Folder\APIx\flight-price-index"
-python -m venv venv
+
+# Activate virtual environment
 .\venv\Scripts\Activate.ps1
+
+# Install backend dependencies
 pip install -r requirements.txt
-```
 
-### 2. Initialize Database & Seed Pilot Data
+# Run the FastAPI REST Server
+uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+```
+👉 Interactive Swagger Docs: **`http://localhost:8000/docs`**
+
+---
+
+### 2. Frontend Setup (Next.js 14 Web Application)
 ```powershell
-python -m database.init_db
-python -m database.seed_demo_data
-```
+# In a new terminal, navigate to the frontend directory
+cd "c:\All Folder\APIx\flight-price-index\frontend"
 
-### 3. Run Data Quality Pipeline
-```powershell
-python -m pipeline.run_pipeline
-```
+# Install frontend dependencies
+npm install
 
-### 4. Run the Streamlit Interactive Dashboard
-```powershell
-streamlit run dashboard/app.py
+# Start Next.js development server
+npm run dev
 ```
-👉 Open browser at: **`http://localhost:8501`**
+👉 Web Dashboard: **`http://localhost:3000`**
 
-### 5. Run the FastAPI REST Service
-```powershell
-uvicorn api.main:app --reload --port 8000
-```
-👉 Interactive Swagger Docs at: **`http://127.0.0.1:8000/docs`**
+---
 
-### 6. Run Automated Test Suite
+### 3. Run Automated Tests
 ```powershell
 pytest -v
 ```
 
 ---
 
-## 🐳 Docker Deployment (Optional)
+## 🐳 Docker Deployment
 
-To launch the entire stack (PostgreSQL + FastAPI + Streamlit Dashboard) in Docker:
+To launch the full production stack (**PostgreSQL + FastAPI Backend + Next.js Web App**) with a single command:
 
 ```powershell
 docker-compose up --build
 ```
-- Streamlit Dashboard: `http://localhost:8501`
-- FastAPI REST API: `http://localhost:8000/docs`
-- PostgreSQL Database: `localhost:5432`
+- **Next.js Web Dashboard:** `http://localhost:3000`
+- **FastAPI REST API:** `http://localhost:8000/docs`
+- **PostgreSQL Database:** `localhost:5432`
 
 ---
 
 ## 📋 Project Status: **100% Completed**
-- [x] **Phase 1: Project & Database Setup**
-- [x] **Phase 2: First Permitted-Source Adapter**
-- [x] **Phase 3: Data Quality Pipeline**
-- [x] **Phase 4: Scheduling & Safety Controls**
-- [x] **Phase 5: Analytics & APIx Index Engine**
-- [x] **Phase 6: Streamlit Interactive Dashboard**
-- [x] **Phase 7: FastAPI, Comprehensive Testing & Docker**
+- [x] **Phase 1: Project & Database Setup** (PostgreSQL 18 + TimescaleDB ready)
+- [x] **Phase 2: Permitted-Source Adapter Engine** (RFC 9309 compliant Playwright)
+- [x] **Phase 3: Data Quality Pipeline** (SHA-256 integrity, deduplication, MAD outliers)
+- [x] **Phase 4: Scheduling & Safety Controls** (Automated daily incremental crawls)
+- [x] **Phase 5: Analytics & APIx Index Engine** (IMF Jevons geometric aggregates + DGCA weights)
+- [x] **Phase 6: Modern Next.js 14 Web Application** (Dynamic Heatmap, Dual-Axis Velocity Analytics, Report Viewer)
+- [x] **Phase 7: FastAPI REST API, Comprehensive Pytest Suite & Docker**

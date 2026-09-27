@@ -35,20 +35,19 @@ services:
       postgres:
         condition: service_healthy
 
-  # 3. Streamlit Interactive Dashboard
-  dashboard:
-    build: .
-    container_name: apix_dashboard
+  # 3. Next.js 14 Web Dashboard
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: apix_frontend
     restart: unless-stopped
-    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
     ports:
-      - "8501:8501"
+      - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql+psycopg://postgres:postgres@postgres:5432/apix_db
-      - ALLOW_SQLITE_FALLBACK=false
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
     depends_on:
-      postgres:
-        condition: service_healthy
+      - api
 
 volumes:
   postgres_data:

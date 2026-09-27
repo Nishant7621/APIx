@@ -18,11 +18,7 @@ playwright>=1.42.0
 # Scheduler
 apscheduler>=3.10.0
 
-# Dashboard & Visualization
-streamlit>=1.32.0
-plotly>=5.20.0
-
-# API (for Phase 7)
+# API Service
 fastapi>=0.110.0
 uvicorn[standard]>=0.28.0
 
