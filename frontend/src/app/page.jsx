@@ -925,7 +925,7 @@ export default function APIxDashboard() {
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Source Access Status</span>
-                <div className="text-2xl font-extrabold text-emerald-700 mt-1">100% Monitored</div>
+                <div className="text-2xl font-extrabold text-emerald-700 mt-1">Fully Monitored</div>
                 <div className="flex items-center space-x-1 text-emerald-600 text-xs font-semibold mt-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>0 Blocks • Rate-Limits Respected</span>
