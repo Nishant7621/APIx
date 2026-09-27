@@ -54,6 +54,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+def on_startup():
+    """Initializes tables and seeds initial benchmark dataset if running on fresh database."""
+    try:
+        from database.connection import Base, get_engine, get_session_maker
+        engine = get_engine()
+        Base.metadata.create_all(bind=engine)
+        SessionLocal = get_session_maker()
+        with SessionLocal() as session:
+            count = session.query(FareQuote).count()
+            if count == 0:
+                print("[STARTUP] Empty database detected. Auto-seeding initial 30-day pilot dataset...")
+                from database.seed_demo_data import seed_demo_data
+                seed_demo_data(days_back=30)
+                from database.seed_hourly_24h_runs import seed_24_hourly_scrapes
+                seed_24_hourly_scrapes()
+                print("[STARTUP] Auto-seeding completed.")
+    except Exception as e:
+        print(f"[STARTUP WARNING] DB initialization: {e}")
+
 @app.get("/", tags=["System"])
 def root():
     """Root health check and metadata index."""

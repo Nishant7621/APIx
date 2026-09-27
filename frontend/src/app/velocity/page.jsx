@@ -54,6 +54,11 @@ ChartJS.register(
   Filler
 );
 
+const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE = (rawApiBase && !rawApiBase.startsWith('http://') && !rawApiBase.startsWith('https://'))
+  ? `https://${rawApiBase}`
+  : rawApiBase;
+
 export default function BookingVsPriceVelocityPage() {
   const [selectedDate, setSelectedDate] = useState('2026-09-26');
   const [timeframe, setTimeframe] = useState('T1'); // 'T1' (24h), 'T7' (7d), 'T15' (15d), 'T30' (30d), 'T45' (45d)
@@ -85,7 +90,7 @@ export default function BookingVsPriceVelocityPage() {
         const data = await res.json();
         setTimelineData(data);
       } else {
-        const directRes = await fetch(`http://localhost:8000/api/v1/timeline?timeframe=${tf}${routeParam}${winParam}${dateParam}${cacheBust}`, { cache: 'no-store' });
+        const directRes = await fetch(`${API_BASE}/api/v1/timeline?timeframe=${tf}${routeParam}${winParam}${dateParam}${cacheBust}`, { cache: 'no-store' });
         if (directRes.ok) {
           const directData = await directRes.json();
           setTimelineData(directData);
@@ -108,7 +113,7 @@ export default function BookingVsPriceVelocityPage() {
     const curHour = String(now.getHours()).padStart(2, '0');
     try {
       const routeParam = selectedRoute && selectedRoute !== 'ALL' ? `&route=${selectedRoute}` : '&route=ALL';
-      const url = `http://localhost:8000/api/v1/export/csv?hours=24&date=${selectedDate}${routeParam}&_t=${Date.now()}`;
+      const url = `${API_BASE}/api/v1/export/csv?hours=24&date=${selectedDate}${routeParam}&_t=${Date.now()}`;
       const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const blob = await res.blob();

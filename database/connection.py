@@ -31,6 +31,12 @@ def get_engine():
         return _engine
 
     target_url = DATABASE_URL
+    # Render and Heroku provide postgres:// URLs, which need dialect driver prefix
+    if target_url.startswith("postgres://"):
+        target_url = target_url.replace("postgres://", "postgresql+psycopg://", 1)
+    elif target_url.startswith("postgresql://") and not target_url.startswith("postgresql+"):
+        target_url = target_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
     try:
         engine = create_engine(
             target_url,

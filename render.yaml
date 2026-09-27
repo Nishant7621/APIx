@@ -1,0 +1,49 @@
+services:
+  # 1. FastAPI REST API Backend Service
+  - type: web
+    name: apix-backend
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn api.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: apix-db
+          property: connectionString
+      - key: ALLOW_SQLITE_FALLBACK
+        value: "true"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+
+  # 2. Next.js 14 Web Dashboard Frontend
+  - type: web
+    name: apix-frontend
+    env: node
+    plan: free
+    region: oregon
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: apix-backend
+          property: host
+      - key: BACKEND_INTERNAL_URL
+        fromService:
+          type: web
+          name: apix-backend
+          property: host
+
+databases:
+  # 3. PostgreSQL Managed Database
+  - name: apix-db
+    databaseName: apix_db
+    user: apix_user
+    plan: free
+    region: oregon

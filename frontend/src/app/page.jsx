@@ -55,6 +55,11 @@ ChartJS.register(
   Filler
 );
 
+const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE = (rawApiBase && !rawApiBase.startsWith('http://') && !rawApiBase.startsWith('https://'))
+  ? `https://${rawApiBase}`
+  : rawApiBase;
+
 export default function APIxDashboard() {
   // Single Collection Date Selector (Default: 2026-09-26 Today's live collection)
   const [selectedDate, setSelectedDate] = useState('2026-09-26');
@@ -119,7 +124,7 @@ export default function APIxDashboard() {
         const data = await res.json();
         setTimelineData(data);
       } else {
-        const directRes = await fetch(`http://localhost:8000/api/v1/timeline?timeframe=${tf}${routeParam}${winParam}${dateParam}`);
+        const directRes = await fetch(`${API_BASE}/api/v1/timeline?timeframe=${tf}${routeParam}${winParam}${dateParam}`);
         if (directRes.ok) {
           const directData = await directRes.json();
           setTimelineData(directData);
@@ -147,7 +152,7 @@ export default function APIxDashboard() {
         const data = await res.json();
         setCollectionHealth(data);
       } else {
-        const directRes = await fetch(`http://localhost:8000/api/v1/collection-health/summary?${params.toString()}`);
+        const directRes = await fetch(`${API_BASE}/api/v1/collection-health/summary?${params.toString()}`);
         if (directRes.ok) {
           const directData = await directRes.json();
           setCollectionHealth(directData);
@@ -253,7 +258,7 @@ export default function APIxDashboard() {
         setHeatmapData(data);
         return;
       }
-      const directRes = await fetch(`http://localhost:8000/api/v1/analytics/heatmap${dateParam}`);
+      const directRes = await fetch(`${API_BASE}/api/v1/analytics/heatmap${dateParam}`);
       if (directRes.ok) {
         const data = await directRes.json();
         setHeatmapData(data);
@@ -273,7 +278,7 @@ export default function APIxDashboard() {
     try {
       // Export all routes for the 24-hour cycle (unless user explicitly filtered a specific single route)
       const routeParam = selectedRoute && selectedRoute !== 'ALL' ? `&route=${selectedRoute}` : '&route=ALL';
-      const url = `http://localhost:8000/api/v1/export/csv?hours=24&date=${selectedDate}${routeParam}&_t=${Date.now()}`;
+      const url = `${API_BASE}/api/v1/export/csv?hours=24&date=${selectedDate}${routeParam}&_t=${Date.now()}`;
       const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const blob = await res.blob();
@@ -2235,7 +2240,7 @@ export default function APIxDashboard() {
                 <span>Export Daily Cleaned CSV</span>
               </button>
               <a 
-                href="http://localhost:8000/docs"
+                href={`${API_BASE}/docs`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold shadow-xs transition"
