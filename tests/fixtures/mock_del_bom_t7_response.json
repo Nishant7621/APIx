@@ -1,0 +1,82 @@
+{
+  "source": "PERMITTED_PUBLIC_PORTAL",
+  "disclaimer": "MOCK FIXTURE - For local educational testing only",
+  "search_params": {
+    "origin": "DEL",
+    "destination": "BOM",
+    "cabin_class": "ECONOMY",
+    "passenger_count": 1,
+    "currency": "INR",
+    "advance_window_days": 7
+  },
+  "flights": [
+    {
+      "flight_number": "6E-5021",
+      "airline_code": "6E",
+      "airline_name": "IndiGo",
+      "stop_count": 0,
+      "departure_time": "2026-09-30T07:15:00",
+      "arrival_time": "2026-09-30T09:30:00",
+      "fare_class": "ECONOMY",
+      "fare_details": {
+        "base_fare": 3650.0,
+        "taxes": 1150.0,
+        "mandatory_charges": 150.0,
+        "total_fare": 4950.0,
+        "currency": "INR"
+      },
+      "availability": "AVAILABLE"
+    },
+    {
+      "flight_number": "AI-805",
+      "airline_code": "AI",
+      "airline_name": "Air India",
+      "stop_count": 0,
+      "departure_time": "2026-09-30T10:00:00",
+      "arrival_time": "2026-09-30T12:15:00",
+      "fare_class": "ECONOMY",
+      "fare_details": {
+        "base_fare": 3800.0,
+        "taxes": 1200.0,
+        "mandatory_charges": 200.0,
+        "total_fare": 5200.0,
+        "currency": "INR"
+      },
+      "availability": "AVAILABLE"
+    },
+    {
+      "flight_number": "QP-1301",
+      "airline_code": "QP",
+      "airline_name": "Akasa Air",
+      "stop_count": 0,
+      "departure_time": "2026-09-30T14:30:00",
+      "arrival_time": "2026-09-30T16:45:00",
+      "fare_class": "ECONOMY",
+      "fare_details": {
+        "base_fare": 3400.0,
+        "taxes": 1100.0,
+        "mandatory_charges": 150.0,
+        "total_fare": 4650.0,
+        "currency": "INR"
+      },
+      "availability": "AVAILABLE"
+    },
+    {
+      "flight_number": "SG-8169",
+      "airline_code": "SG",
+      "airline_name": "SpiceJet",
+      "stop_count": 1,
+      "departure_time": "2026-09-30T06:00:00",
+      "arrival_time": "2026-09-30T11:45:00",
+      "fare_class": "ECONOMY",
+      "fare_details": {
+        "base_fare": 3100.0,
+        "taxes": 1050.0,
+        "mandatory_charges": 150.0,
+        "total_fare": 4300.0,
+        "currency": "INR"
+      },
+      "availability": "AVAILABLE"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database Service
+  postgres:
+    image: postgres:16-alpine
+    container_name: apix_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: apix_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d apix_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. FastAPI Web API Service
+  api:
+    build: .
+    container_name: apix_api
+    restart: unless-stopped
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://postgres:postgres@postgres:5432/apix_db
+      - ALLOW_SQLITE_FALLBACK=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # 3. Streamlit Interactive Dashboard
+  dashboard:
+    build: .
+    container_name: apix_dashboard
+    restart: unless-stopped
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://postgres:postgres@postgres:5432/apix_db
+      - ALLOW_SQLITE_FALLBACK=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
