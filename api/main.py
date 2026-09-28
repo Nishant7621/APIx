@@ -518,7 +518,8 @@ def get_timeline(
     - T30: 30-day baseline trend
     - T45: 45-day horizon curve
     """
-    today_ist = datetime.date(2026, 9, 26)
+    max_db_date = db.query(func.max(func.date(FareQuote.collected_at))).scalar()
+    today_ist = max_db_date if max_db_date else datetime.date(2026, 9, 27)
     target_date = None
     if date:
         try:
@@ -528,11 +529,12 @@ def get_timeline(
     else:
         target_date = today_ist
 
-    # Trigger automatic catch-up check for today's hours on every page refresh
-    if target_date == today_ist:
+    # Trigger automatic catch-up check if target date is current IST date
+    now_ist = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=5, minutes=30)
+    if target_date == now_ist.date():
         ensure_today_hours_collected(db)
 
-    # Future date check or uncollected date check (e.g. 2026-09-23 or > 2026-09-26)
+    # Future date check or uncollected date check (e.g. 2026-09-23 or > latest DB date)
     if target_date > today_ist or str(target_date) == "2026-09-23":
         return TimelineResponse(
             timeframe=timeframe,
