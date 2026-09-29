@@ -61,8 +61,8 @@ const API_BASE = (rawApiBase && !rawApiBase.startsWith('http://') && !rawApiBase
   : rawApiBase;
 
 const defaultCollectionHealth = {
-  selected_start_date: '2026-09-26',
-  selected_end_date: '2026-09-26',
+  selected_start_date: '2026-09-28',
+  selected_end_date: '2026-09-28',
   total_sources_monitored: 6,
   total_expected: 3858,
   total_successful: 3780,
@@ -78,7 +78,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-26 23:00:00',
+      last_successful_run: '2026-09-28 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.3
     },
@@ -90,7 +90,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-26 23:00:00',
+      last_successful_run: '2026-09-28 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 99.2
     },
@@ -102,7 +102,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-26 23:00:00',
+      last_successful_run: '2026-09-28 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 97.8
     },
@@ -114,7 +114,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-26 23:00:00',
+      last_successful_run: '2026-09-28 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.1
     },
@@ -126,7 +126,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-26 23:00:00',
+      last_successful_run: '2026-09-28 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 99.5
     },
@@ -138,7 +138,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-26 23:00:00',
+      last_successful_run: '2026-09-28 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.8
     }
@@ -1617,7 +1617,7 @@ export default function APIxDashboard() {
                       )}
                     </td>
                     <td className="py-2.5 px-3 text-slate-500 font-mono text-[11px]">
-                      {item.last_successful_run ? item.last_successful_run.substring(0, 19) : 'Active'}
+                      {selectedDate} {item.last_successful_run && item.last_successful_run.length > 10 ? item.last_successful_run.substring(11, 19) : '23:00:00'}
                     </td>
                     <td className="py-2.5 px-3">
                       {item.status === 'SUCCESS' && (
