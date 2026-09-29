@@ -61,8 +61,8 @@ const API_BASE = (rawApiBase && !rawApiBase.startsWith('http://') && !rawApiBase
   : rawApiBase;
 
 const defaultCollectionHealth = {
-  selected_start_date: '2026-09-28',
-  selected_end_date: '2026-09-28',
+  selected_start_date: '2026-09-29',
+  selected_end_date: '2026-09-29',
   total_sources_monitored: 6,
   total_expected: 3858,
   total_successful: 3780,
@@ -78,7 +78,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-28 23:00:00',
+      last_successful_run: '2026-09-29 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.3
     },
@@ -90,7 +90,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-28 23:00:00',
+      last_successful_run: '2026-09-29 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 99.2
     },
@@ -102,7 +102,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-28 23:00:00',
+      last_successful_run: '2026-09-29 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 97.8
     },
@@ -114,7 +114,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-28 23:00:00',
+      last_successful_run: '2026-09-29 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.1
     },
@@ -126,7 +126,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-28 23:00:00',
+      last_successful_run: '2026-09-29 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 99.5
     },
@@ -138,7 +138,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-09-28 23:00:00',
+      last_successful_run: '2026-09-29 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.8
     }
@@ -146,8 +146,8 @@ const defaultCollectionHealth = {
 };
 
 export default function APIxDashboard() {
-  // Single Collection Date Selector (Default: 2026-09-28 Today's live collection)
-  const [selectedDate, setSelectedDate] = useState('2026-09-28');
+  // Single Collection Date Selector (Default: 2026-09-29 Today's live collection)
+  const [selectedDate, setSelectedDate] = useState('2026-09-29');
   const [selectedWindow, setSelectedWindow] = useState(1); // 1, 7, 15, 30, 45 (T+1, T+7, etc.)
   const [timeframe, setTimeframe] = useState('T1'); // 'T1' (24 Hours Intraday) or 'T7' (7-Day Trend)
   const [activeTab, setActiveTab] = useState('ota'); // 'ota' (OTAs vs Avg) or 'airline' (Airlines vs APIx)
@@ -185,12 +185,12 @@ export default function APIxDashboard() {
   const [highlightSurgeOnly, setHighlightSurgeOnly] = useState(false);
 
   // Dates with verified scraping in the database
-  // Collected pilot dates: 2026-08-24 to 2026-09-28.
-  // 2026-09-23 is demo no-data day; dates after 2026-09-28 are in future -> "Arriving Soon"
+  // Collected pilot dates: 2026-08-24 to 2026-09-29.
+  // 2026-09-23 is demo no-data day; dates after 2026-09-29 are in future -> "Arriving Soon"
   const isDateAvailable = (d) => {
     if (!d) return false;
     if (d === '2026-09-23') return false; // Explicitly no data for 23-09-2026 as user specified
-    if (d > '2026-09-28') return false; // Future date: Not yet collected -> Arriving Soon
+    if (d > '2026-09-29') return false; // Future date: Not yet collected -> Arriving Soon
     if (d < '2026-08-24') return false; // Prior to pilot inception
     return true;
   };
@@ -1147,7 +1147,7 @@ export default function APIxDashboard() {
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2 flex-wrap">
                     <span className="font-extrabold text-amber-900">
-                      Live Ingestion in Progress — {timeframe === 'T7' ? 'Day 5 of 7' : timeframe === 'T15' ? 'Day 5 of 15' : timeframe === 'T30' ? 'Day 5 of 30' : 'Day 5 of 45'} (Started 24-09-2026)
+                      Live Ingestion in Progress — {timeframe === 'T7' ? 'Day 6 of 7' : timeframe === 'T15' ? 'Day 6 of 15' : timeframe === 'T30' ? 'Day 6 of 30' : 'Day 6 of 45'} (Started 24-09-2026)
                     </span>
                     <span className="text-[10px] font-bold bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-full border border-amber-300">
                       Official Dossier Unlocks: {timeframe === 'T7' ? '30-09-2026' : timeframe === 'T15' ? '08-10-2026' : timeframe === 'T30' ? '23-10-2026' : '07-11-2026'}
@@ -1177,7 +1177,7 @@ export default function APIxDashboard() {
                     Data Not Available for {selectedDate} ... Arriving Soon
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    {selectedDate > '2026-09-28' ? (
+                    {selectedDate > '2026-09-29' ? (
                       <>
                         Collection for <strong>{selectedDate}</strong> is scheduled in the queue. 
                         The automated background scraping daemon runs 24 times every day on the hour and will collect this date automatically when reached.
@@ -1190,11 +1190,11 @@ export default function APIxDashboard() {
                     )}
                   </p>
                   <button
-                    onClick={() => setSelectedDate('2026-09-28')}
+                    onClick={() => setSelectedDate('2026-09-29')}
                     className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold shadow-xs transition"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Switch to 28-09-2026 (Fresh Scraped Data)</span>
+                    <span>Switch to 29-09-2026 (Fresh Scraped Data)</span>
                   </button>
                 </div>
               )}
@@ -1382,7 +1382,7 @@ export default function APIxDashboard() {
                   <span className="text-xs font-bold text-amber-950 uppercase">Week 1 Report (7 Days)</span>
                   <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-300 flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                    <span>Day 5/7 Active</span>
+                    <span>Day 6/7 Active</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1391,11 +1391,11 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-amber-900">
-                    <span>Cycle Progress: Day 5 of 7</span>
-                    <span>71.4%</span>
+                    <span>Cycle Progress: Day 6 of 7</span>
+                    <span>85.7%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-amber-200 overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '71.4%' }}></div>
+                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '85.7%' }}></div>
                   </div>
                   <div className="text-[10px] text-amber-800 font-medium">Unlocks on: <strong>30-09-2026</strong></div>
                 </div>
@@ -1420,7 +1420,7 @@ export default function APIxDashboard() {
                   <span className="text-xs font-bold text-orange-950 uppercase">15-Day Mid-Pilot Report</span>
                   <span className="text-[10px] font-bold bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full border border-orange-300 flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
-                    <span>Day 5/15 Active</span>
+                    <span>Day 6/15 Active</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1429,11 +1429,11 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-orange-900">
-                    <span>Cycle Progress: Day 5 of 15</span>
-                    <span>33.3%</span>
+                    <span>Cycle Progress: Day 6 of 15</span>
+                    <span>40.0%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-orange-200 overflow-hidden">
-                    <div className="h-full bg-orange-500 rounded-full" style={{ width: '33.3%' }}></div>
+                    <div className="h-full bg-orange-500 rounded-full" style={{ width: '40.0%' }}></div>
                   </div>
                   <div className="text-[10px] text-orange-800 font-medium">Unlocks on: <strong>08-10-2026</strong></div>
                 </div>
@@ -1458,7 +1458,7 @@ export default function APIxDashboard() {
                   <span className="text-xs font-bold text-blue-950 uppercase">30-Day Benchmark Baseline</span>
                   <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full border border-blue-300 flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                    <span>Day 5/30 Active</span>
+                    <span>Day 6/30 Active</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1467,11 +1467,11 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-blue-900">
-                    <span>Cycle Progress: Day 5 of 30</span>
-                    <span>16.7%</span>
+                    <span>Cycle Progress: Day 6 of 30</span>
+                    <span>20.0%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-blue-200 overflow-hidden">
-                    <div className="h-full bg-blue-500 rounded-full" style={{ width: '16.7%' }}></div>
+                    <div className="h-full bg-blue-500 rounded-full" style={{ width: '20.0%' }}></div>
                   </div>
                   <div className="text-[10px] text-blue-800 font-medium">Unlocks on: <strong>23-10-2026</strong></div>
                 </div>
@@ -1496,7 +1496,7 @@ export default function APIxDashboard() {
                   <span className="text-xs font-bold text-purple-950 uppercase">45-Day Macro Dossier (T+45)</span>
                   <span className="text-[10px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full border border-purple-300 flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
-                    <span>Day 5/45 Active</span>
+                    <span>Day 6/45 Active</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1505,11 +1505,11 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-purple-900">
-                    <span>Cycle Progress: Day 5 of 45</span>
-                    <span>11.1%</span>
+                    <span>Cycle Progress: Day 6 of 45</span>
+                    <span>13.3%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-purple-200 overflow-hidden">
-                    <div className="h-full bg-purple-500 rounded-full" style={{ width: '11.1%' }}></div>
+                    <div className="h-full bg-purple-500 rounded-full" style={{ width: '13.3%' }}></div>
                   </div>
                   <div className="text-[10px] text-purple-800 font-medium">Unlocks on: <strong>07-11-2026</strong></div>
                 </div>
@@ -2464,23 +2464,23 @@ export default function APIxDashboard() {
               <div className="flex justify-between items-center font-bold text-slate-800">
                 <span>Cycle Ingestion Progress:</span>
                 <span className="text-orange-600">
-                  {activeReportModal === 'week1' && 'Day 5 of 7 (71.4% Complete)'}
-                  {activeReportModal === 'day15' && 'Day 5 of 15 (33.3% Complete)'}
-                  {activeReportModal === 'day30' && 'Day 5 of 30 (16.7% Complete)'}
-                  {activeReportModal === 'day45' && 'Day 5 of 45 (11.1% Complete)'}
+                  {activeReportModal === 'week1' && 'Day 6 of 7 (85.7% Complete)'}
+                  {activeReportModal === 'day15' && 'Day 6 of 15 (40.0% Complete)'}
+                  {activeReportModal === 'day30' && 'Day 6 of 30 (20.0% Complete)'}
+                  {activeReportModal === 'day45' && 'Day 6 of 45 (13.3% Complete)'}
                 </span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full transition-all duration-500"
                   style={{
-                    width: activeReportModal === 'week1' ? '71.4%' : activeReportModal === 'day15' ? '33.3%' : activeReportModal === 'day30' ? '16.7%' : '11.1%'
+                    width: activeReportModal === 'week1' ? '85.7%' : activeReportModal === 'day15' ? '40.0%' : activeReportModal === 'day30' ? '20.0%' : '13.3%'
                   }}
                 ></div>
               </div>
               <div className="flex justify-between text-[11px] text-slate-500 pt-0.5">
                 <span>Inception: <strong>24-09-2026</strong></span>
-                <span>Current: <strong>28-09-2026 (Live)</strong></span>
+                <span>Current: <strong>29-09-2026 (Live)</strong></span>
                 <span>Release: <strong>{activeReportModal === 'week1' ? '30-09-2026' : activeReportModal === 'day15' ? '08-10-2026' : activeReportModal === 'day30' ? '23-10-2026' : '07-11-2026'}</strong></span>
               </div>
             </div>
