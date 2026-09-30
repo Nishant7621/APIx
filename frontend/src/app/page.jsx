@@ -1400,7 +1400,7 @@ export default function APIxDashboard() {
                   <div className="text-[10px] text-amber-800 font-medium">Unlocks on: <strong>30-09-2026</strong></div>
                 </div>
                 <div className="text-[11px] text-slate-500 space-y-1 bg-white p-2.5 rounded-lg border border-amber-100">
-                  <div>• Clean Quotes: <strong>84,100+ verified</strong></div>
+                  <div>• Clean Quotes: <strong>102,100+ verified</strong></div>
                   <div>• Source Health: <strong>100% (0 Blocks/CAPTCHA)</strong></div>
                   <div>• Official Release: <strong>30-09-2026</strong></div>
                 </div>
@@ -2491,7 +2491,7 @@ export default function APIxDashboard() {
               <div className="grid grid-cols-2 gap-2 text-[11px]">
                 <div className="p-2 rounded-lg bg-emerald-50/60 border border-emerald-200">
                   <span className="text-slate-500 block">Clean Quotes Audited:</span>
-                  <strong className="text-emerald-800 text-xs">84,100+ verified rows</strong>
+                  <strong className="text-emerald-800 text-xs">102,100+ verified rows</strong>
                 </div>
                 <div className="p-2 rounded-lg bg-blue-50/60 border border-blue-200">
                   <span className="text-slate-500 block">Scraper Health Rate:</span>
