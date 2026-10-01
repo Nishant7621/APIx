@@ -60,7 +60,7 @@ const API_BASE = (rawApiBase && !rawApiBase.startsWith('http://') && !rawApiBase
   : rawApiBase;
 
 export default function BookingVsPriceVelocityPage() {
-  const [selectedDate, setSelectedDate] = useState('2026-09-29');
+  const [selectedDate, setSelectedDate] = useState('2026-09-30');
   const [timeframe, setTimeframe] = useState('T1'); // 'T1' (24h), 'T7' (7d), 'T15' (15d), 'T30' (30d), 'T45' (45d)
   const [selectedRoute, setSelectedRoute] = useState('ALL');
   const [selectedWindow, setSelectedWindow] = useState(7); // 1, 7, 15, 30, 45
@@ -70,7 +70,7 @@ export default function BookingVsPriceVelocityPage() {
   const isDateAvailable = (d) => {
     if (!d) return false;
     if (d === '2026-09-23') return false; // Demo no-data day
-    if (d > '2026-09-29') return false; // Future dates: Arriving Soon
+    if (d > '2026-09-30') return false; // Future dates: Arriving Soon
     if (d < '2026-08-24') return false;
     return true;
   };
@@ -866,7 +866,7 @@ export default function BookingVsPriceVelocityPage() {
                   Data Not Available for {selectedDate} ... Arriving Soon
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  {selectedDate > '2026-09-29' ? (
+                  {selectedDate > '2026-09-30' ? (
                     <>
                       Collection for <strong>{selectedDate}</strong> is scheduled in the queue. 
                       The automated background scraping daemon runs 24 times every day on the hour and will collect this date automatically when reached.
@@ -879,11 +879,11 @@ export default function BookingVsPriceVelocityPage() {
                   )}
                 </p>
                 <button
-                  onClick={() => setSelectedDate('2026-09-29')}
+                  onClick={() => setSelectedDate('2026-09-30')}
                   className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold shadow-xs transition"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Switch to 29-09-2026 (Fresh Scraped Data)</span>
+                  <span>Switch to 30-09-2026 (Fresh Scraped Data)</span>
                 </button>
               </div>
             )}
