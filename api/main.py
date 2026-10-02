@@ -519,7 +519,7 @@ def get_timeline(
     - T45: 45-day horizon curve
     """
     max_db_date = db.query(func.max(func.date(FareQuote.collected_at))).scalar()
-    today_ist = max_db_date if max_db_date else datetime.date(2026, 9, 30)
+    today_ist = max_db_date if max_db_date else datetime.date(2026, 10, 1)
     target_date = None
     if date:
         try:

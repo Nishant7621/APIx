@@ -168,11 +168,14 @@ def update_dashboard_page(target_date_iso, day_num, clean_count):
     )
 
     # 6. Milestone Card Week 1 (7 Days)
-    content = re.sub(r"Day \d+/7 Active", f"Day {day_num}/7 Active", content)
-    content = re.sub(r"Cycle Progress: Day \d+ of 7", f"Cycle Progress: Day {day_num} of 7", content)
+    day_w1 = min(7, day_num)
+    w1_status = "Completed" if day_num >= 7 else "Active"
+    content = re.sub(r"Day \d+/7 (Active|Completed)", f"Day {day_w1}/7 {w1_status}", content)
+    content = re.sub(r"Day \d+/7 Active", f"Day {day_w1}/7 {w1_status}", content)
+    content = re.sub(r"Cycle Progress: Day \d+ of 7", f"Cycle Progress: Day {day_w1} of 7", content)
     content = re.sub(
         r"<span>Cycle Progress: Day \d+ of 7</span>\s*<span>\d+\.?\d*%</span>",
-        f"<span>Cycle Progress: Day {day_num} of 7</span>\n                    <span>{pct_w1}%</span>",
+        f"<span>Cycle Progress: Day {day_w1} of 7</span>\n                    <span>{pct_w1}%</span>",
         content
     )
     content = re.sub(
@@ -233,7 +236,7 @@ def update_dashboard_page(target_date_iso, day_num, clean_count):
     # 11. Modal text
     content = re.sub(
         r"\{activeReportModal === 'week1' && 'Day \d+ of 7 \(\d+\.?\d*% Complete\)'\}",
-        f"{{activeReportModal === 'week1' && 'Day {day_num} of 7 ({pct_w1}% Complete)'}}",
+        f"{{activeReportModal === 'week1' && 'Day {day_w1} of 7 ({pct_w1}% Complete)'}}",
         content
     )
     content = re.sub(
