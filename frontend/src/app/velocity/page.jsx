@@ -197,23 +197,20 @@ export default function BookingVsPriceVelocityPage() {
     ];
 
     let rowCount = 35000;
-    const targetBaseDate = selectedDate ? new Date(selectedDate) : now;
+    // Parse target date purely from string components to prevent timezone slip (e.g. UTC -> West of UTC shifting 02 to 01)
+    const activeDateStr = selectedDate || '2026-10-02';
+    const [tY, tM, tD] = activeDateStr.split('-').map(Number);
+    const dateLabel = `${tY}-${String(tM).padStart(2, '0')}-${String(tD).padStart(2, '0')}`;
 
     for (let h = 23; h >= 0; h--) {
-      const d = new Date(targetBaseDate);
-      d.setHours(h, 0, 0, 0);
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const dd = String(d.getDate()).padStart(2, '0');
       const hh = String(h).padStart(2, '0');
-      const dateLabel = `${yyyy}-${mm}-${dd}`;
       const timeOnly = `${hh}:00:00`;
       const timeLabel = `${dateLabel} ${timeOnly}`;
       const hourlyMult = hourlyMults[h] || 1.0;
 
       trunkRoutes.forEach(r => {
         allWindows.forEach(win => {
-          const travelD = new Date(d.getTime() + win.w * 24 * 3600 * 1000);
+          const travelD = new Date(tY, tM - 1, tD + win.w);
           const travelDateStr = `${travelD.getFullYear()}-${String(travelD.getMonth() + 1).padStart(2, '0')}-${String(travelD.getDate()).padStart(2, '0')}`;
 
           platforms.forEach(plat => {
