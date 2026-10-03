@@ -842,7 +842,7 @@ export default function BookingVsPriceVelocityPage() {
               title="Download 24-hour clean CSV dataset for all 6 routes"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Export 24h CSV (All Routes)</span>
+              <span>Export 24h CSV ({selectedDate})</span>
             </button>
           </div>
 
