@@ -90,6 +90,12 @@ def update_velocity_page(target_date_iso):
         f"Switch to {d_fmt} (Fresh Scraped Data)",
         content
     )
+    # 5. Update activeDateStr fallback
+    content = re.sub(
+        r"const activeDateStr = selectedDate \|\| '\d{4}-\d{2}-\d{2}';",
+        f"const activeDateStr = selectedDate || '{target_date_iso}';",
+        content
+    )
 
     filepath.write_text(content, encoding="utf-8")
     print(f"[OK] Updated frontend/src/app/velocity/page.jsx to {target_date_iso}")
@@ -273,6 +279,13 @@ def update_dashboard_page(target_date_iso, day_num, clean_count):
     content = re.sub(
         r'<strong className="text-emerald-800 text-xs">[\d,]+\+ verified rows</strong>',
         f'<strong className="text-emerald-800 text-xs">{quotes_str} verified rows</strong>',
+        content
+    )
+
+    # Update activeDateStr fallback
+    content = re.sub(
+        r"const activeDateStr = selectedDate \|\| '\d{4}-\d{2}-\d{2}';",
+        f"const activeDateStr = selectedDate || '{target_date_iso}';",
         content
     )
 
