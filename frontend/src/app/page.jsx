@@ -42,6 +42,7 @@ import {
   LayoutGrid,
   Sparkles
 } from 'lucide-react';
+import Week1ReportModal from './Week1ReportModal';
 
 ChartJS.register(
   CategoryScale,
@@ -1443,9 +1444,10 @@ export default function APIxDashboard() {
               </div>
               <button 
                 onClick={() => setActiveReportModal('week1')}
-                className="w-full text-center py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-2xs transition cursor-pointer"
+                className="w-full text-center py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-sm hover:shadow transition cursor-pointer flex items-center justify-center space-x-1.5"
               >
-                Preview 7-Day Ingestion Status
+                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+                <span>View 7-Day Analytical Dossier (Unlocked)</span>
               </button>
             </div>
 
@@ -2455,7 +2457,12 @@ export default function APIxDashboard() {
       </main>
 
       {/* Report Modal Viewer */}
-      {activeReportModal && (
+      {activeReportModal === 'week1' ? (
+        <Week1ReportModal 
+          onClose={() => setActiveReportModal(null)} 
+          onExportCsv={handleExportCsv} 
+        />
+      ) : activeReportModal ? (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -2582,7 +2589,7 @@ export default function APIxDashboard() {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* Footer */}
       <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 text-center text-xs text-slate-400">
