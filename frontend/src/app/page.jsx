@@ -180,6 +180,53 @@ export default function APIxDashboard() {
 
   const [showOtaAverage, setShowOtaAverage] = useState(true);
 
+  // Regulatory Tracking Cycle Baseline Inception Date (Default: 2026-09-24 pilot inception)
+  const [reportStartDate, setReportStartDate] = useState('2026-09-24');
+
+  // Dynamic Milestone Progress Calculations based on user-selected Cycle Start Date & Selected Date
+  const calculateMilestones = (startStr, endStr) => {
+    const [sY, sM, sD] = (startStr || '2026-09-24').split('-').map(Number);
+    const [eY, eM, eD] = (endStr || '2026-10-05').split('-').map(Number);
+    
+    const startDate = new Date(sY, sM - 1, sD);
+    const endDate = new Date(eY, eM - 1, eD);
+    
+    const diffTime = endDate.getTime() - startDate.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 3600 * 24));
+    const elapsedDays = Math.max(1, diffDays + 1);
+
+    const formatD = (d) => {
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}-${mm}-${yyyy}`;
+    };
+
+    const addDays = (baseDate, days) => {
+      const res = new Date(baseDate);
+      res.setDate(res.getDate() + days);
+      return res;
+    };
+
+    const calcCycle = (target) => {
+      const days = Math.min(target, elapsedDays);
+      const pct = Number(Math.min(100.0, (days / target) * 100).toFixed(1));
+      const isComplete = elapsedDays >= target;
+      const unlockDate = formatD(addDays(startDate, target - 1));
+      return { days, target, pct, isComplete, unlockDate };
+    };
+
+    return {
+      elapsedDays,
+      w1: calcCycle(7),
+      d15: calcCycle(15),
+      d30: calcCycle(30),
+      d45: calcCycle(45)
+    };
+  };
+
+  const milestones = calculateMilestones(reportStartDate, selectedDate);
+
   // Heatmap Matrix State
   const [heatmapData, setHeatmapData] = useState(null);
   const [heatmapMetric, setHeatmapMetric] = useState('fare'); // 'fare' (₹), 'surge' (%), 'diurnal'
@@ -1412,15 +1459,75 @@ export default function APIxDashboard() {
             </button>
           </div>
 
+          {/* DYNAMIC REGULATORY TRACKING CYCLE FILTER BAR */}
+          <div className="bg-gradient-to-r from-slate-50 via-orange-50/20 to-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center space-x-2.5">
+              <div className="p-1.5 bg-orange-100 text-orange-700 rounded-lg shrink-0">
+                <Calendar className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-xs font-bold text-slate-900 block">Regulatory Tracking Cycle Inception Filter</span>
+                <span className="text-[11px] text-slate-500">
+                  Select cycle baseline start date to calibrate periodic milestone progress (e.g., 1/7, 1/15, 1/30):
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2.5 flex-wrap">
+              <div className="flex items-center space-x-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs">
+                <label className="text-[11px] font-bold text-slate-700">Cycle Start Date:</label>
+                <input 
+                  type="date"
+                  value={reportStartDate}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val) setReportStartDate(val);
+                  }}
+                  min="2026-08-24"
+                  max={selectedDate}
+                  className="bg-transparent border-none text-slate-900 text-xs font-semibold focus:outline-hidden cursor-pointer"
+                />
+              </div>
+
+              <span className="text-slate-400 font-bold text-xs">→</span>
+
+              <div className="flex items-center space-x-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs">
+                <span className="text-[11px] font-bold text-slate-600">Current As Of:</span>
+                <span className="text-xs font-extrabold text-orange-700">
+                  {selectedDate}
+                </span>
+              </div>
+
+              <span className="px-2.5 py-1 bg-orange-100 text-orange-800 text-[11px] font-extrabold rounded-lg border border-orange-200">
+                Cycle Ingestion: Day {milestones.elapsedDays} ({milestones.elapsedDays === 1 ? '1 Day' : `${milestones.elapsedDays} Days`})
+              </span>
+
+              {reportStartDate !== '2026-09-24' && (
+                <button
+                  onClick={() => setReportStartDate('2026-09-24')}
+                  className="text-[11px] text-orange-600 hover:text-orange-700 font-bold underline cursor-pointer"
+                >
+                  Reset (24-09-2026)
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Report 1: Week 1 */}
-            <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/40 space-y-3 flex flex-col justify-between shadow-2xs">
+            <div className={`p-4 rounded-xl border space-y-3 flex flex-col justify-between shadow-2xs ${
+              milestones.w1.isComplete ? 'border-amber-300 bg-amber-50/40' : 'border-orange-200 bg-orange-50/30'
+            }`}>
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-1 flex-wrap">
                   <span className="text-xs font-bold text-amber-950 uppercase">Week 1 Report (7 Days)</span>
-                  <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-300 flex items-center space-x-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                    <span>Day 7/7 Completed</span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center space-x-1 ${
+                    milestones.w1.isComplete 
+                      ? 'bg-amber-100 text-amber-800 border-amber-300' 
+                      : 'bg-orange-100 text-orange-800 border-orange-300'
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${milestones.w1.isComplete ? 'bg-amber-500' : 'bg-orange-500 animate-pulse'}`}></span>
+                    <span>{milestones.w1.isComplete ? 'Day 7/7 Completed' : `Day ${milestones.w1.days}/7 Active`}</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1429,26 +1536,28 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-amber-900">
-                    <span>Cycle Progress: Day 7 of 7</span>
-                    <span>100.0%</span>
+                    <span>Cycle Progress: Day {milestones.w1.days} of 7</span>
+                    <span>{milestones.w1.pct}%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-amber-200 overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '100.0%' }}></div>
+                    <div className="h-full bg-amber-500 rounded-full transition-all duration-300" style={{ width: `${milestones.w1.pct}%` }}></div>
                   </div>
-                  <div className="text-[10px] text-amber-800 font-medium">Unlocks on: <strong>30-09-2026</strong></div>
+                  <div className="text-[10px] text-amber-800 font-medium">Unlocks on: <strong>{milestones.w1.unlockDate}</strong></div>
                 </div>
                 <div className="text-[11px] text-slate-500 space-y-1 bg-white p-2.5 rounded-lg border border-amber-100">
                   <div>• Clean Quotes: <strong>216,580+ verified</strong></div>
                   <div>• Source Health: <strong>100% (0 Blocks/CAPTCHA)</strong></div>
-                  <div>• Official Release: <strong>30-09-2026</strong></div>
+                  <div>• Target Release: <strong>{milestones.w1.unlockDate}</strong></div>
                 </div>
               </div>
               <button 
                 onClick={() => setActiveReportModal('week1')}
-                className="w-full text-center py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-sm hover:shadow transition cursor-pointer flex items-center justify-center space-x-1.5"
+                className={`w-full text-center py-2.5 rounded-lg text-white text-xs font-extrabold shadow-sm hover:shadow transition cursor-pointer flex items-center justify-center space-x-1.5 ${
+                  milestones.w1.isComplete ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-orange-600 hover:bg-orange-700'
+                }`}
               >
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                <span>View 7-Day Analytical Dossier (Unlocked)</span>
+                {milestones.w1.isComplete ? <CheckCircle2 className="w-3.5 h-3.5 text-white" /> : <Clock className="w-3.5 h-3.5 text-white" />}
+                <span>{milestones.w1.isComplete ? 'View 7-Day Analytical Dossier (Unlocked)' : `Preview 7-Day Dossier (Day ${milestones.w1.days} of 7)`}</span>
               </button>
             </div>
 
@@ -1457,9 +1566,13 @@ export default function APIxDashboard() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-1 flex-wrap">
                   <span className="text-xs font-bold text-orange-950 uppercase">15-Day Mid-Pilot Report</span>
-                  <span className="text-[10px] font-bold bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full border border-orange-300 flex items-center space-x-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
-                    <span>Day 12/15 Active</span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center space-x-1 ${
+                    milestones.d15.isComplete 
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                      : 'bg-orange-100 text-orange-800 border-orange-300'
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${milestones.d15.isComplete ? 'bg-emerald-500' : 'bg-orange-500 animate-pulse'}`}></span>
+                    <span>{milestones.d15.isComplete ? 'Day 15/15 Completed' : `Day ${milestones.d15.days}/15 Active`}</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1468,25 +1581,25 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-orange-900">
-                    <span>Cycle Progress: Day 12 of 15</span>
-                    <span>80.0%</span>
+                    <span>Cycle Progress: Day {milestones.d15.days} of 15</span>
+                    <span>{milestones.d15.pct}%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-orange-200 overflow-hidden">
-                    <div className="h-full bg-orange-500 rounded-full" style={{ width: '80.0%' }}></div>
+                    <div className="h-full bg-orange-500 rounded-full transition-all duration-300" style={{ width: `${milestones.d15.pct}%` }}></div>
                   </div>
-                  <div className="text-[10px] text-orange-800 font-medium">Unlocks on: <strong>08-10-2026</strong></div>
+                  <div className="text-[10px] text-orange-800 font-medium">Unlocks on: <strong>{milestones.d15.unlockDate}</strong></div>
                 </div>
                 <div className="text-[11px] text-slate-500 space-y-1 bg-white p-2.5 rounded-lg border border-orange-100">
                   <div>• Advance Surge: <strong>+42.5% (T+1 vs T+45)</strong></div>
                   <div>• Zero Fee Leader: <strong>EaseMyTrip (₹0 Fee)</strong></div>
-                  <div>• Official Release: <strong>08-10-2026</strong></div>
+                  <div>• Target Release: <strong>{milestones.d15.unlockDate}</strong></div>
                 </div>
               </div>
               <button 
                 onClick={() => setActiveReportModal('day15')}
                 className="w-full text-center py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-2xs transition cursor-pointer"
               >
-                Preview 15-Day Ingestion Status
+                {milestones.d15.isComplete ? 'View 15-Day Mid-Pilot Report (Unlocked)' : 'Preview 15-Day Ingestion Status'}
               </button>
             </div>
 
@@ -1495,9 +1608,13 @@ export default function APIxDashboard() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-1 flex-wrap">
                   <span className="text-xs font-bold text-blue-950 uppercase">30-Day Benchmark Baseline</span>
-                  <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full border border-blue-300 flex items-center space-x-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                    <span>Day 12/30 Active</span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center space-x-1 ${
+                    milestones.d30.isComplete 
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                      : 'bg-blue-100 text-blue-800 border-blue-300'
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${milestones.d30.isComplete ? 'bg-emerald-500' : 'bg-blue-500 animate-pulse'}`}></span>
+                    <span>{milestones.d30.isComplete ? 'Day 30/30 Completed' : `Day ${milestones.d30.days}/30 Active`}</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1506,25 +1623,25 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-blue-900">
-                    <span>Cycle Progress: Day 12 of 30</span>
-                    <span>40.0%</span>
+                    <span>Cycle Progress: Day {milestones.d30.days} of 30</span>
+                    <span>{milestones.d30.pct}%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-blue-200 overflow-hidden">
-                    <div className="h-full bg-blue-500 rounded-full" style={{ width: '40.0%' }}></div>
+                    <div className="h-full bg-blue-500 rounded-full transition-all duration-300" style={{ width: `${milestones.d30.pct}%` }}></div>
                   </div>
-                  <div className="text-[10px] text-blue-800 font-medium">Unlocks on: <strong>23-10-2026</strong></div>
+                  <div className="text-[10px] text-blue-800 font-medium">Unlocks on: <strong>{milestones.d30.unlockDate}</strong></div>
                 </div>
                 <div className="text-[11px] text-slate-500 space-y-1 bg-white p-2.5 rounded-lg border border-blue-100">
                   <div>• Progression: <strong>100.0 → 124.62 (+1.84%)</strong></div>
                   <div>• Macro Utility: <strong>High-Frequency Nowcasting</strong></div>
-                  <div>• Official Release: <strong>23-10-2026</strong></div>
+                  <div>• Target Release: <strong>{milestones.d30.unlockDate}</strong></div>
                 </div>
               </div>
               <button 
                 onClick={() => setActiveReportModal('day30')}
                 className="w-full text-center py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-2xs transition cursor-pointer"
               >
-                Preview 30-Day Index Dossier
+                {milestones.d30.isComplete ? 'View 30-Day Index Dossier (Unlocked)' : 'Preview 30-Day Index Dossier'}
               </button>
             </div>
 
@@ -1533,9 +1650,13 @@ export default function APIxDashboard() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-1 flex-wrap">
                   <span className="text-xs font-bold text-purple-950 uppercase">45-Day Macro Dossier (T+45)</span>
-                  <span className="text-[10px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full border border-purple-300 flex items-center space-x-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
-                    <span>Day 12/45 Active</span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center space-x-1 ${
+                    milestones.d45.isComplete 
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                      : 'bg-purple-100 text-purple-800 border-purple-300'
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${milestones.d45.isComplete ? 'bg-emerald-500' : 'bg-purple-500 animate-pulse'}`}></span>
+                    <span>{milestones.d45.isComplete ? 'Day 45/45 Completed' : `Day ${milestones.d45.days}/45 Active`}</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -1544,25 +1665,25 @@ export default function APIxDashboard() {
                 {/* Progress bar */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-[10px] font-semibold text-purple-900">
-                    <span>Cycle Progress: Day 12 of 45</span>
-                    <span>26.7%</span>
+                    <span>Cycle Progress: Day {milestones.d45.days} of 45</span>
+                    <span>{milestones.d45.pct}%</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-purple-200 overflow-hidden">
-                    <div className="h-full bg-purple-500 rounded-full" style={{ width: '26.7%' }}></div>
+                    <div className="h-full bg-purple-500 rounded-full transition-all duration-300" style={{ width: `${milestones.d45.pct}%` }}></div>
                   </div>
-                  <div className="text-[10px] text-purple-800 font-medium">Unlocks on: <strong>07-11-2026</strong></div>
+                  <div className="text-[10px] text-purple-800 font-medium">Unlocks on: <strong>{milestones.d45.unlockDate}</strong></div>
                 </div>
                 <div className="text-[11px] text-slate-500 space-y-1 bg-white p-2.5 rounded-lg border border-purple-100">
                   <div>• Lead-Time Curve: <strong>T+45 down to T+1</strong></div>
                   <div>• Deflator Modeling: <strong>Core Service Inflation</strong></div>
-                  <div>• Official Release: <strong>07-11-2026</strong></div>
+                  <div>• Target Release: <strong>{milestones.d45.unlockDate}</strong></div>
                 </div>
               </div>
               <button 
                 onClick={() => setActiveReportModal('day45')}
                 className="w-full text-center py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-2xs transition cursor-pointer"
               >
-                Preview 45-Day Macro Dossier
+                {milestones.d45.isComplete ? 'View 45-Day Macro Dossier (Unlocked)' : 'Preview 45-Day Macro Dossier'}
               </button>
             </div>
           </div>
@@ -2461,6 +2582,9 @@ export default function APIxDashboard() {
       {activeReportModal === 'week1' ? (
         <Week1ReportModal 
           onClose={() => setActiveReportModal(null)} 
+          reportStartDate={reportStartDate}
+          selectedDate={selectedDate}
+          milestones={milestones}
         />
       ) : activeReportModal ? (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -2479,7 +2603,7 @@ export default function APIxDashboard() {
                     <span>NOT YET DECLARED — CYCLE IN PROGRESS</span>
                   </span>
                   <span className="text-[11px] text-slate-500 font-semibold">
-                    Unlocks: {activeReportModal === 'week1' ? '30-09-2026' : activeReportModal === 'day15' ? '08-10-2026' : activeReportModal === 'day30' ? '23-10-2026' : '07-11-2026'}
+                    Unlocks: {activeReportModal === 'week1' ? milestones.w1.unlockDate : activeReportModal === 'day15' ? milestones.d15.unlockDate : activeReportModal === 'day30' ? milestones.d30.unlockDate : milestones.d45.unlockDate}
                   </span>
                 </div>
               </div>
@@ -2498,7 +2622,7 @@ export default function APIxDashboard() {
                 <span>Statutory Statistical Integrity Notice:</span>
               </div>
               <p className="leading-relaxed text-[11px] text-amber-900">
-                Because this is a brand new, highly transparent implementation started on <strong>24-09-2026</strong>, the historical analytics blocks for 7-day trends, 15-day, 30-day, and 45-day models are currently accumulating live data. To ensure absolute statistical integrity and avoid fake anomalies, our index engine strictly requires a continuous completed cycle baseline. As indicated on the UI, the comprehensive analytical report will be fully unlocked and available for download exactly after the completed cycle on <strong>{activeReportModal === 'week1' ? '30-09-2026' : activeReportModal === 'day15' ? '08-10-2026' : activeReportModal === 'day30' ? '23-10-2026' : '07-11-2026'}</strong>.
+                Because this is a brand new, highly transparent implementation started on <strong>{reportStartDate}</strong>, the historical analytics blocks for 7-day trends, 15-day, 30-day, and 45-day models are currently accumulating live data. To ensure absolute statistical integrity and avoid fake anomalies, our index engine strictly requires a continuous completed cycle baseline. As indicated on the UI, the comprehensive analytical report will be fully unlocked and available for download exactly after the completed cycle on <strong>{activeReportModal === 'week1' ? milestones.w1.unlockDate : activeReportModal === 'day15' ? milestones.d15.unlockDate : activeReportModal === 'day30' ? milestones.d30.unlockDate : milestones.d45.unlockDate}</strong>.
               </p>
             </div>
 
@@ -2507,24 +2631,26 @@ export default function APIxDashboard() {
               <div className="flex justify-between items-center font-bold text-slate-800">
                 <span>Cycle Ingestion Progress:</span>
                 <span className="text-orange-600">
-                  {activeReportModal === 'week1' && 'Day 7 of 7 (100.0% Complete)'}
-                  {activeReportModal === 'day15' && 'Day 12 of 15 (80.0% Complete)'}
-                  {activeReportModal === 'day30' && 'Day 12 of 30 (40.0% Complete)'}
-                  {activeReportModal === 'day45' && 'Day 12 of 45 (26.7% Complete)'}
+                  {activeReportModal === 'week1' && `Day ${milestones.w1.days} of 7 (${milestones.w1.pct}% Complete)`}
+                  {activeReportModal === 'day15' && `Day ${milestones.d15.days} of 15 (${milestones.d15.pct}% Complete)`}
+                  {activeReportModal === 'day30' && `Day ${milestones.d30.days} of 30 (${milestones.d30.pct}% Complete)`}
+                  {activeReportModal === 'day45' && `Day ${milestones.d45.days} of 45 (${milestones.d45.pct}% Complete)`}
                 </span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full transition-all duration-500"
                   style={{
-                    width: activeReportModal === 'week1' ? '100.0%' : activeReportModal === 'day15' ? '80.0%' : activeReportModal === 'day30' ? '40.0%' : '26.7%'
+                    width: activeReportModal === 'week1' ? `${milestones.w1.pct}%` : 
+                           activeReportModal === 'day15' ? `${milestones.d15.pct}%` : 
+                           activeReportModal === 'day30' ? `${milestones.d30.pct}%` : `${milestones.d45.pct}%`
                   }}
                 ></div>
               </div>
               <div className="flex justify-between text-[11px] text-slate-500 pt-0.5">
-                <span>Inception: <strong>24-09-2026</strong></span>
-                <span>Current: <strong>05-10-2026 (Live)</strong></span>
-                <span>Release: <strong>{activeReportModal === 'week1' ? '30-09-2026' : activeReportModal === 'day15' ? '08-10-2026' : activeReportModal === 'day30' ? '23-10-2026' : '07-11-2026'}</strong></span>
+                <span>Inception: <strong>{reportStartDate}</strong></span>
+                <span>Current: <strong>{selectedDate} (Live)</strong></span>
+                <span>Release: <strong>{activeReportModal === 'week1' ? milestones.w1.unlockDate : activeReportModal === 'day15' ? milestones.d15.unlockDate : activeReportModal === 'day30' ? milestones.d30.unlockDate : milestones.d45.unlockDate}</strong></span>
               </div>
             </div>
 

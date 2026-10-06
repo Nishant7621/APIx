@@ -7,7 +7,7 @@ import {
   ExternalLink, Zap, HelpCircle, ChevronRight, Scale
 } from 'lucide-react';
 
-export default function Week1ReportModal({ onClose }) {
+export default function Week1ReportModal({ onClose, reportStartDate = '2026-09-24', selectedDate = '2026-10-05', milestones }) {
   const [activeTab, setActiveTab] = useState('summary');
 
   const printReport = () => {
@@ -93,9 +93,22 @@ export default function Week1ReportModal({ onClose }) {
         <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-5 sm:p-6 shrink-0 border-b border-slate-700 flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center space-x-2 flex-wrap">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1">
-                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                <span>OFFICIALLY AUDITED & UNLOCKED</span>
+              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border flex items-center space-x-1 ${
+                milestones?.w1?.isComplete
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  : 'bg-orange-500/20 text-orange-300 border-orange-500/30'
+              }`}>
+                {milestones?.w1?.isComplete ? (
+                  <>
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    <span>OFFICIALLY AUDITED & UNLOCKED</span>
+                  </>
+                ) : (
+                  <>
+                    <Clock className="w-3 h-3 text-orange-400" />
+                    <span>CYCLE IN PROGRESS — DAY {milestones?.w1?.days || 1} OF 7 ({milestones?.w1?.pct || 14.3}%)</span>
+                  </>
+                )}
               </span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/30">
                 MoSPI / DGCA RESEARCH FORMAT
@@ -109,7 +122,7 @@ export default function Week1ReportModal({ onClose }) {
               <span>Week 1 Comprehensive Airfare Price Index Dossier</span>
             </h2>
             <p className="text-xs text-slate-300 font-medium">
-              7-Day Continuous Ingestion Cycle • 24-09-2026 to 30-09-2026 • 120,100+ Verified Observations across 6 DGCA Trunk Routes
+              Continuous Ingestion Cycle (Day {milestones?.w1?.days || 7} of 7) • {reportStartDate} to {selectedDate} • 120,100+ Verified Observations across 6 DGCA Trunk Routes
             </p>
           </div>
 
@@ -330,7 +343,7 @@ export default function Week1ReportModal({ onClose }) {
               Report {pageNum}: {reportTitle}
             </h1>
             <p className="text-[10px] text-slate-600 font-medium">
-              7-Day Continuous Ingestion Cycle • 24-09-2026 to 30-09-2026 • 120,100+ Verified Observations across 6 DGCA Trunk Routes
+              Continuous Ingestion Cycle (Day {milestones?.w1?.days || 7} of 7) • {reportStartDate} to {selectedDate} • 120,100+ Verified Observations across 6 DGCA Trunk Routes
             </p>
           </div>
           <div className="text-right">
