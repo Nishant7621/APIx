@@ -36,6 +36,7 @@ import {
   Server,
   FileText,
   Download,
+  Printer,
   Filter,
   Check,
   FileSpreadsheet,
@@ -1403,11 +1404,11 @@ export default function APIxDashboard() {
               </p>
             </div>
             <button 
-              onClick={handleExportCsv}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer"
+              onClick={() => setActiveReportModal('week1')}
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download Live Cleaned CSV ({selectedDate})</span>
+              <Printer className="w-3.5 h-3.5 text-orange-400" />
+              <span>Download PDF Report (7-Day Dossier)</span>
             </button>
           </div>
 
@@ -2460,7 +2461,6 @@ export default function APIxDashboard() {
       {activeReportModal === 'week1' ? (
         <Week1ReportModal 
           onClose={() => setActiveReportModal(null)} 
-          onExportCsv={handleExportCsv} 
         />
       ) : activeReportModal ? (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -2573,11 +2573,11 @@ export default function APIxDashboard() {
               </span>
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={handleExportCsv}
-                  className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700 transition cursor-pointer flex items-center space-x-1"
+                  onClick={() => setActiveReportModal('week1')}
+                  className="px-3.5 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800 transition cursor-pointer flex items-center space-x-1.5"
                 >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Download Live Cleaned CSV (To Date)</span>
+                  <Printer className="w-3.5 h-3.5 text-orange-400" />
+                  <span>Download Audited PDF Dossier</span>
                 </button>
                 <button
                   onClick={() => setActiveReportModal(null)}
