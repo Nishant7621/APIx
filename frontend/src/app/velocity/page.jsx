@@ -60,7 +60,7 @@ const API_BASE = (rawApiBase && !rawApiBase.startsWith('http://') && !rawApiBase
   : rawApiBase;
 
 export default function BookingVsPriceVelocityPage() {
-  const [selectedDate, setSelectedDate] = useState('2026-10-06');
+  const [selectedDate, setSelectedDate] = useState('2026-10-07');
   const [timeframe, setTimeframe] = useState('T1'); // 'T1' (24h), 'T7' (7d), 'T15' (15d), 'T30' (30d), 'T45' (45d)
   const [selectedRoute, setSelectedRoute] = useState('ALL');
   const [selectedWindow, setSelectedWindow] = useState(7); // 1, 7, 15, 30, 45
@@ -70,7 +70,7 @@ export default function BookingVsPriceVelocityPage() {
   const isDateAvailable = (d) => {
     if (!d) return false;
     if (d === '2026-09-23') return false; // Demo no-data day
-    if (d > '2026-10-06') return false; // Future dates: Arriving Soon
+    if (d > '2026-10-07') return false; // Future dates: Arriving Soon
     if (d < '2026-08-24') return false;
     return true;
   };
@@ -198,7 +198,7 @@ export default function BookingVsPriceVelocityPage() {
 
     let rowCount = 35000;
     // Parse target date purely from string components to prevent timezone slip (e.g. UTC -> West of UTC shifting 02 to 01)
-    const activeDateStr = selectedDate || '2026-10-06';
+    const activeDateStr = selectedDate || '2026-10-07';
     const [tY, tM, tD] = activeDateStr.split('-').map(Number);
     const dateLabel = `${tY}-${String(tM).padStart(2, '0')}-${String(tD).padStart(2, '0')}`;
 
@@ -863,7 +863,7 @@ export default function BookingVsPriceVelocityPage() {
                   Data Not Available for {selectedDate} ... Arriving Soon
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  {selectedDate > '2026-10-06' ? (
+                  {selectedDate > '2026-10-07' ? (
                     <>
                       Collection for <strong>{selectedDate}</strong> is scheduled in the queue. 
                       The automated background scraping daemon runs 24 times every day on the hour and will collect this date automatically when reached.
@@ -876,11 +876,11 @@ export default function BookingVsPriceVelocityPage() {
                   )}
                 </p>
                 <button
-                  onClick={() => setSelectedDate('2026-10-06')}
+                  onClick={() => setSelectedDate('2026-10-07')}
                   className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold shadow-xs transition"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Switch to 06-10-2026 (Fresh Scraped Data)</span>
+                  <span>Switch to 07-10-2026 (Fresh Scraped Data)</span>
                 </button>
               </div>
             )}
