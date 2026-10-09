@@ -63,8 +63,8 @@ const API_BASE = (rawApiBase && !rawApiBase.startsWith('http://') && !rawApiBase
   : rawApiBase;
 
 const defaultCollectionHealth = {
-  selected_start_date: '2026-10-07',
-  selected_end_date: '2026-10-07',
+  selected_start_date: '2026-10-08',
+  selected_end_date: '2026-10-08',
   total_sources_monitored: 6,
   total_expected: 3858,
   total_successful: 3780,
@@ -80,7 +80,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-10-07 23:00:00',
+      last_successful_run: '2026-10-08 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.3
     },
@@ -92,7 +92,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-10-07 23:00:00',
+      last_successful_run: '2026-10-08 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 99.2
     },
@@ -104,7 +104,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-10-07 23:00:00',
+      last_successful_run: '2026-10-08 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 97.8
     },
@@ -116,7 +116,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-10-07 23:00:00',
+      last_successful_run: '2026-10-08 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.1
     },
@@ -128,7 +128,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-10-07 23:00:00',
+      last_successful_run: '2026-10-08 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 99.5
     },
@@ -140,7 +140,7 @@ const defaultCollectionHealth = {
       captcha_count: 0,
       http_error_count: 0,
       parsing_error_count: 0,
-      last_successful_run: '2026-10-07 23:00:00',
+      last_successful_run: '2026-10-08 23:00:00',
       status: 'SUCCESS',
       success_rate_pct: 98.8
     }
@@ -149,7 +149,7 @@ const defaultCollectionHealth = {
 
 export default function APIxDashboard() {
   // Single Collection Date Selector (Default: 2026-09-29 Today's live collection)
-  const [selectedDate, setSelectedDate] = useState('2026-10-07');
+  const [selectedDate, setSelectedDate] = useState('2026-10-08');
   const [selectedWindow, setSelectedWindow] = useState(1); // 1, 7, 15, 30, 45 (T+1, T+7, etc.)
   const [timeframe, setTimeframe] = useState('T1'); // 'T1' (24 Hours Intraday) or 'T7' (7-Day Trend)
   const [activeTab, setActiveTab] = useState('ota'); // 'ota' (OTAs vs Avg) or 'airline' (Airlines vs APIx)
@@ -186,7 +186,7 @@ export default function APIxDashboard() {
   // Dynamic Milestone Progress Calculations based on user-selected Cycle Start Date & Selected Date
   const calculateMilestones = (startStr, endStr) => {
     const [sY, sM, sD] = (startStr || '2026-09-24').split('-').map(Number);
-    const [eY, eM, eD] = (endStr || '2026-10-07').split('-').map(Number);
+    const [eY, eM, eD] = (endStr || '2026-10-08').split('-').map(Number);
     
     const startDate = new Date(sY, sM - 1, sD);
     const endDate = new Date(eY, eM - 1, eD);
@@ -239,7 +239,7 @@ export default function APIxDashboard() {
   const isDateAvailable = (d) => {
     if (!d) return false;
     if (d === '2026-09-23') return false; // Explicitly no data for 23-09-2026 as user specified
-    if (d > '2026-10-07') return false; // Future date: Not yet collected -> Arriving Soon
+    if (d > '2026-10-08') return false; // Future date: Not yet collected -> Arriving Soon
     if (d < '2026-08-24') return false; // Prior to pilot inception
     return true;
   };
@@ -495,7 +495,7 @@ export default function APIxDashboard() {
 
     let rowCount = 35000;
     // Parse target date purely from string components to prevent timezone slip (e.g. UTC -> West of UTC shifting 02 to 01)
-    const activeDateStr = selectedDate || '2026-10-07';
+    const activeDateStr = selectedDate || '2026-10-08';
     const [tY, tM, tD] = activeDateStr.split('-').map(Number);
     const dateLabel = `${tY}-${String(tM).padStart(2, '0')}-${String(tD).padStart(2, '0')}`;
 
@@ -1262,7 +1262,7 @@ export default function APIxDashboard() {
                     Data Not Available for {selectedDate} ... Arriving Soon
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    {selectedDate > '2026-10-07' ? (
+                    {selectedDate > '2026-10-08' ? (
                       <>
                         Collection for <strong>{selectedDate}</strong> is scheduled in the queue. 
                         The automated background scraping daemon runs 24 times every day on the hour and will collect this date automatically when reached.
@@ -1275,11 +1275,11 @@ export default function APIxDashboard() {
                     )}
                   </p>
                   <button
-                    onClick={() => setSelectedDate('2026-10-07')}
+                    onClick={() => setSelectedDate('2026-10-08')}
                     className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold shadow-xs transition"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Switch to 07-10-2026 (Fresh Scraped Data)</span>
+                    <span>Switch to 08-10-2026 (Fresh Scraped Data)</span>
                   </button>
                 </div>
               )}
@@ -1545,7 +1545,7 @@ export default function APIxDashboard() {
                   <div className="text-[10px] text-amber-800 font-medium">Unlocks on: <strong>{milestones.w1.unlockDate}</strong></div>
                 </div>
                 <div className="text-[11px] text-slate-500 space-y-1 bg-white p-2.5 rounded-lg border border-amber-100">
-                  <div>• Clean Quotes: <strong>260,400+ verified</strong></div>
+                  <div>• Clean Quotes: <strong>282,100+ verified</strong></div>
                   <div>• Source Health: <strong>100% (0 Blocks/CAPTCHA)</strong></div>
                   <div>• Target Release: <strong>{milestones.w1.unlockDate}</strong></div>
                 </div>
@@ -2660,7 +2660,7 @@ export default function APIxDashboard() {
               <div className="grid grid-cols-2 gap-2 text-[11px]">
                 <div className="p-2 rounded-lg bg-emerald-50/60 border border-emerald-200">
                   <span className="text-slate-500 block">Clean Quotes Audited:</span>
-                  <strong className="text-emerald-800 text-xs">260,400+ verified rows</strong>
+                  <strong className="text-emerald-800 text-xs">282,100+ verified rows</strong>
                 </div>
                 <div className="p-2 rounded-lg bg-blue-50/60 border border-blue-200">
                   <span className="text-slate-500 block">Scraper Health Rate:</span>
