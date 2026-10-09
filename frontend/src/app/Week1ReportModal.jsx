@@ -7,7 +7,7 @@ import {
   ExternalLink, Zap, HelpCircle, ChevronRight, Scale
 } from 'lucide-react';
 
-export default function Week1ReportModal({ onClose, reportStartDate = '2026-09-24', selectedDate = '2026-10-08', milestones }) {
+export default function Week1ReportModal({ onClose, reportStartDate = '2026-09-24', selectedDate = '2026-10-09', milestones }) {
   const [activeTab, setActiveTab] = useState('summary');
 
   const printReport = () => {
