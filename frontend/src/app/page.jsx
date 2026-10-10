@@ -2496,83 +2496,47 @@ export default function APIxDashboard() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <a 
-              href="https://www.cpi.mospi.gov.in/Default1.aspx" 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-orange-50/50 hover:border-orange-200 transition group block"
-            >
-              <div className="text-xs font-bold text-slate-900 group-hover:text-orange-600 flex items-center justify-between">
+            <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50">
+              <div className="text-xs font-bold text-slate-900">
                 <span>MoSPI / NSO</span>
-                <ExternalLink className="w-3 h-3 text-slate-400" />
               </div>
               <div className="text-[11px] text-slate-500 mt-1">CPI Transport Basket (8.59% Weight)</div>
-            </a>
+            </div>
 
-            <a 
-              href="https://www.dgca.gov.in" 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-orange-50/50 hover:border-orange-200 transition group block"
-            >
-              <div className="text-xs font-bold text-slate-900 group-hover:text-orange-600 flex items-center justify-between">
+            <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50">
+              <div className="text-xs font-bold text-slate-900">
                 <span>DGCA</span>
-                <ExternalLink className="w-3 h-3 text-slate-400" />
               </div>
               <div className="text-[11px] text-slate-500 mt-1">Passenger Traffic Distribution (w_i)</div>
-            </a>
+            </div>
 
-            <a 
-              href="https://www.civilaviation.gov.in" 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-orange-50/50 hover:border-orange-200 transition group block"
-            >
-              <div className="text-xs font-bold text-slate-900 group-hover:text-orange-600 flex items-center justify-between">
+            <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50">
+              <div className="text-xs font-bold text-slate-900">
                 <span>MoCA</span>
-                <ExternalLink className="w-3 h-3 text-slate-400" />
               </div>
               <div className="text-[11px] text-slate-500 mt-1">Bharatiya Vayuyan Adhiniyam, 2024</div>
-            </a>
+            </div>
 
-            <a 
-              href="https://www.rbi.org.in" 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-orange-50/50 hover:border-orange-200 transition group block"
-            >
-              <div className="text-xs font-bold text-slate-900 group-hover:text-orange-600 flex items-center justify-between">
+            <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50">
+              <div className="text-xs font-bold text-slate-900">
                 <span>RBI</span>
-                <ExternalLink className="w-3 h-3 text-slate-400" />
               </div>
               <div className="text-[11px] text-slate-500 mt-1">Monetary Policy Research & Nowcasting</div>
-            </a>
+            </div>
 
-            <a 
-              href="https://www.cci.gov.in" 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-orange-50/50 hover:border-orange-200 transition group block"
-            >
-              <div className="text-xs font-bold text-slate-900 group-hover:text-orange-600 flex items-center justify-between">
+            <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50">
+              <div className="text-xs font-bold text-slate-900">
                 <span>CCI</span>
-                <ExternalLink className="w-3 h-3 text-slate-400" />
               </div>
               <div className="text-[11px] text-slate-500 mt-1">Market Studies on Dynamic Pricing</div>
-            </a>
+            </div>
 
-            <a 
-              href="https://www.rfc-editor.org/rfc9309" 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-orange-50/50 hover:border-orange-200 transition group block"
-            >
-              <div className="text-xs font-bold text-slate-900 group-hover:text-orange-600 flex items-center justify-between">
+            <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50">
+              <div className="text-xs font-bold text-slate-900">
                 <span>IETF RFC 9309</span>
-                <ExternalLink className="w-3 h-3 text-slate-400" />
               </div>
               <div className="text-[11px] text-slate-500 mt-1">Robots Exclusion Protocol Standard</div>
-            </a>
+            </div>
           </div>
         </div>
 
