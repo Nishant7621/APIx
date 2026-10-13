@@ -8,6 +8,18 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/docs',
+        destination: `${backendUrl}/docs`,
+      },
+      {
+        source: '/redoc',
+        destination: `${backendUrl}/redoc`,
+      },
+      {
+        source: '/openapi.json',
+        destination: `${backendUrl}/openapi.json`,
+      },
+      {
         source: '/api/backend/:path*',
         destination: `${backendUrl}/api/v1/:path*`,
       },

@@ -2484,7 +2484,7 @@ export default function APIxDashboard() {
                 <span>Export Daily Cleaned CSV</span>
               </button>
               <a 
-                href={`${API_BASE}/docs`}
+                href="/docs"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold shadow-xs transition"
